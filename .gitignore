@@ -1,0 +1,39 @@
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.properties
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### Mergetool ###
+.orig
+
+### Build Results ###
+target/
+bin/
+*.log
+
+### Others ###
+.apt_generated
+.externalToolBuilders
+/mvnw
+.mvn
+wae/baseAntProperty.xml
+src/main/resources/application.properties
+src/main/resources/application-dev.properties
