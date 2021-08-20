@@ -14,6 +14,12 @@ public class AmqpMessage<T> extends BaseMessage {
      */
     private String uniqueMessageId;
 
+
+    /**
+     * Routing key of the message
+     */
+    private String routingKey;
+
     /**
      * Custom message body
      */
@@ -69,5 +75,22 @@ public class AmqpMessage<T> extends BaseMessage {
      */
     public void setMessageBody(T messageBody) {
         this.messageBody = messageBody;
+    }
+
+    /**
+     * @return value of message routing-key
+     */
+    public String getRoutingKey() {
+        return routingKey;
+    }
+
+    /**
+     * Setter of message routing key
+     *
+     * @param routingKey
+     *          Routing key for the message
+     */
+    public void setRoutingKey(String routingKey) {
+        this.routingKey = routingKey;
     }
 }

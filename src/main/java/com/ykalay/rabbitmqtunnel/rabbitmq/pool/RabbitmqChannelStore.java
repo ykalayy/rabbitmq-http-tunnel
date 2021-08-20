@@ -9,5 +9,6 @@ package com.ykalay.rabbitmqtunnel.rabbitmq.pool;
  */
 public class RabbitmqChannelStore {
 
-
+    protected RabbitmqChannelStore() {
+    }
 }

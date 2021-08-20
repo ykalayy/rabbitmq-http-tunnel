@@ -19,13 +19,13 @@ public abstract class BaseNettyHandler<V> extends SimpleChannelInboundHandler<V>
 
     private static final Logger log = LoggerFactory.getLogger(BaseNettyHandler.class.getName());
 
-    private static boolean DEFAULT_AUTO_RELEASE = true;
+    private static final boolean DEFAULT_AUTO_RELEASE = true;
 
-    public BaseNettyHandler() {
+    protected BaseNettyHandler() {
         this(DEFAULT_AUTO_RELEASE);
     }
 
-    public BaseNettyHandler(boolean autoRelease) {
+    protected BaseNettyHandler(boolean autoRelease) {
         super(autoRelease);
     }
 

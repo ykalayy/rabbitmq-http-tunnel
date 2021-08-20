@@ -10,6 +10,9 @@ import java.util.Objects;
 
 import static com.ykalay.rabbitmqtunnel.constant.NettyConst.*;
 
+/**
+ * Netty channel pipeline initializer
+ */
 public class BaseNettyChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     /**

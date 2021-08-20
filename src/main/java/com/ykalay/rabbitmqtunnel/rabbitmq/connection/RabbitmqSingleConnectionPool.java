@@ -1,5 +1,7 @@
 package com.ykalay.rabbitmqtunnel.rabbitmq.connection;
 
+import com.rabbitmq.client.Connection;
+
 import java.util.Objects;
 
 /**
@@ -26,8 +28,18 @@ public class RabbitmqSingleConnectionPool {
         return LAZY_HOLDER;
     }
 
-    private RabbitmqSingleConnectionPool() {
+    /**
+     * A single Rabbitmq Connection
+     */
+    private Connection rabbitMqConnection;
 
+    private RabbitmqSingleConnectionPool() { }
+
+    public Connection getRabbitMqConnection() {
+        return rabbitMqConnection;
     }
 
+    public void setRabbitMqConnection(Connection rabbitMqConnection) {
+        this.rabbitMqConnection = rabbitMqConnection;
+    }
 }
