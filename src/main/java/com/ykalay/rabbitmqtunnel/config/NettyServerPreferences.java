@@ -3,6 +3,7 @@ package com.ykalay.rabbitmqtunnel.config;
 import com.ykalay.rabbitmqtunnel.support.SystemEnvironmentUtil;
 
 import java.util.Objects;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Netty related config values preference class
@@ -11,6 +12,7 @@ import java.util.Objects;
  *          NETTY_PORT: Port of netty to listen incoming HTTP request
  *          NETTY_EVENT_LOOP_SIZE: Size of EventLoopThread
  *          NETTY_NATIVE_SUPPORT: Native support of netty
+ *          HTTP_TIMEOUT_SEC: Timeout second
  *
  * @author ykalay
  *
@@ -48,6 +50,18 @@ public class NettyServerPreferences {
     private static final int DEFAULT_NETTY_EVENT_LOOP_SIZE = Runtime.getRuntime().availableProcessors() * 2;
 
     /**
+     * Default {@link ScheduledThreadPoolExecutor} core-pool size
+     *
+     * @see com.ykalay.rabbitmqtunnel.core.netty.NettyChannelTimeoutScheduler
+     */
+    public static final int DEFAULT_TIMEOUT_SCHEDULER_THREAD_SIZE = Runtime.getRuntime().availableProcessors() * 2;
+
+    /**
+     * Default timeout of http requests
+     */
+    private static final int DEFAULT_TIMEOUT_SEC = 60;
+
+    /**
      * Default native support of netty(epoll)
      * More details please check:
      *
@@ -76,6 +90,11 @@ public class NettyServerPreferences {
      * Be careful Alpine container lovers. Because Alpine currently doesn't support the epoll
      */
     private boolean nativeSupport;
+
+    /**
+     * Netty timeout sec
+     */
+    private int nettyTimeoutSec;
 
     /**
      * @return Netty-port value
@@ -129,6 +148,23 @@ public class NettyServerPreferences {
     }
 
     /**
+     * @return Timeout-value of nett-server
+     */
+    public int getNettyTimeoutSec() {
+        return nettyTimeoutSec;
+    }
+
+    /**
+     * Sets the netty http timeout sec
+     *
+     * @param nettyTimeoutSec
+     *          New timeout value(sec)
+     */
+    public void setNettyTimeoutSec(int nettyTimeoutSec) {
+        this.nettyTimeoutSec = nettyTimeoutSec;
+    }
+
+    /**
      * Initialize the default config values of netty-server
      */
     private void init() {
@@ -152,6 +188,12 @@ public class NettyServerPreferences {
             this.setNativeSupport(DEFAULT_NATIVE_SUPPORT);
         } else {
             this.setNativeSupport(SystemEnvironmentUtil.getBool("NETTY_NATIVE_SUPPORT"));
+        }
+
+        if(SystemEnvironmentUtil.getInt("HTTP_TIMEOUT_SEC", -1) == -1) {
+            this.setNettyTimeoutSec(DEFAULT_TIMEOUT_SEC);
+        } else {
+            this.setNettyTimeoutSec(SystemEnvironmentUtil.getInt("HTTP_TIMEOUT_SEC", -1));
         }
     }
 }

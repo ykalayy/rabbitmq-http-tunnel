@@ -1,11 +1,11 @@
 package com.ykalay.rabbitmqtunnel.handler;
 
 /**
- * Rabbitmq-rest-tunnel Controller
+ * Rabbitmq-http-tunnel Controller
  *
  * @author ykalay
  *
  * @since 1.0
  */
-public interface RestAmqpTunnelController {
+public interface HttpAmqpTunnelController {
 }

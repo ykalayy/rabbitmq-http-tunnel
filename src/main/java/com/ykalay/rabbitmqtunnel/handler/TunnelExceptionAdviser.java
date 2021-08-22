@@ -1,7 +1,7 @@
 package com.ykalay.rabbitmqtunnel.handler;
 
 /**
- * Rabbitmq REST->AMQP tunnel Exception adviser
+ * Rabbitmq HTTP->AMQP tunnel Exception adviser
  * Catch the possible exception and allows to the service handle them.
  *
  * @author ykalay

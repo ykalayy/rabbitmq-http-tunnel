@@ -2,6 +2,10 @@ package com.ykalay.rabbitmqtunnel.constant;
 
 /**
  * Handler-Enum const
+ *
+ * @author ykalay
+ *
+ * @since 1.0
  */
 public enum NettyConst {
 

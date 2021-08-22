@@ -38,11 +38,11 @@ public class RabbitmqServerConfig {
 
     private static final int DEFAULT_RABBITMQ_PORT = 5672;
 
-    private static final String DEFAULT_EXCHANGE_NAME = "rabbitmq-rest-tunnel-exchange";
+    private static final String DEFAULT_EXCHANGE_NAME = "rabbitmq-http-tunnel-responseExchange";
 
-    private static final String DEFAULT_QUEUE_NAME = "rabbitmq-rest-tunnel-queue";
+    private static final String DEFAULT_QUEUE_NAME = "rabbitmq-http-tunnel-responseQueue";
 
-    private static final int DEFAULT_SELF_QUEUE_CONSUMER_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int DEFAULT_SELF_QUEUE_CONSUMER_COUNT = Runtime.getRuntime().availableProcessors() * 2;
 
     private int rabbitmqPort = DEFAULT_RABBITMQ_PORT;
 

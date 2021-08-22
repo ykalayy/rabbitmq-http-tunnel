@@ -1,4 +1,4 @@
-package com.ykalay.rabbitmqtunnel.core;
+package com.ykalay.rabbitmqtunnel.core.netty;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,6 +18,7 @@ public class MappingHandler extends BaseNettyHandler<HttpRequest> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpRequest httpRequest) throws Exception {
+
         // TODO HANDLER SEARCH AND DO LOGICS
     }
 }

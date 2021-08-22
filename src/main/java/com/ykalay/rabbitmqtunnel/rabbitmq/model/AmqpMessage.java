@@ -14,6 +14,13 @@ public class AmqpMessage<T> extends BaseMessage {
      */
     private String uniqueMessageId;
 
+    /**
+     * Target Exchange, By default,
+     * It is set by
+     *          {@link com.ykalay.rabbitmqtunnel.annotation.AmqpTunnelRequestMapper}
+     *                      If targetExchange value is sett
+     */
+    private String targetExchange;
 
     /**
      * Routing key of the message
@@ -31,22 +38,44 @@ public class AmqpMessage<T> extends BaseMessage {
     public AmqpMessage() {}
 
     /**
-     * All-args constructor of message
+     * Constructor of message
      *
      * @param uniqueMessageId
      *          Unique message identifier of message
      * @param messageBody
      *          Custom message body
+     * @param routingKey
+     *          Routing-key
      */
-    public AmqpMessage(String uniqueMessageId, T messageBody) {
+    public AmqpMessage(String uniqueMessageId, String routingKey, T messageBody) {
         this.uniqueMessageId = uniqueMessageId;
+        this.routingKey = routingKey;
+        this.messageBody = messageBody;
+    }
+
+    /**
+     * All-args Constructor of message
+     *
+     * @param uniqueMessageId
+     *          Unique message identifier of message
+     * @param routingKey
+     *          Routing-key
+     * @param  targetExchange
+     *          Target exchange name
+     * @param messageBody
+     *          Custom message body
+     */
+    public AmqpMessage(String uniqueMessageId, String routingKey, String targetExchange, T messageBody) {
+        this.uniqueMessageId = uniqueMessageId;
+        this.routingKey = routingKey;
+        this.targetExchange = targetExchange;
         this.messageBody = messageBody;
     }
 
     /**
      * @return value of message identifier as {@link Integer}
      */
-    private String getUniqueMessageId() {
+    public String getUniqueMessageId() {
         return uniqueMessageId;
     }
 
@@ -92,5 +121,22 @@ public class AmqpMessage<T> extends BaseMessage {
      */
     public void setRoutingKey(String routingKey) {
         this.routingKey = routingKey;
+    }
+
+    /**
+     * @return value of message target-exchange-name
+     */
+    public String getTargetExchange() {
+        return targetExchange;
+    }
+
+    /**
+     * Setter of targetExchange of message
+     *
+     * @param targetExchange
+     *          Target exchange name for incoming-http request
+     */
+    public void setTargetExchange(String targetExchange) {
+        this.targetExchange = targetExchange;
     }
 }

@@ -1,4 +1,4 @@
-package com.ykalay.rabbitmqtunnel.core;
+package com.ykalay.rabbitmqtunnel.core.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -12,6 +12,10 @@ import static com.ykalay.rabbitmqtunnel.constant.NettyConst.*;
 
 /**
  * Netty channel pipeline initializer
+ *
+ * @author ykalay
+ *
+ * @since 1.0
  */
 public class BaseNettyChannelInitializer extends ChannelInitializer<SocketChannel> {
 

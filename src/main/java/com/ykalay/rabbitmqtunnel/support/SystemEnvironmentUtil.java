@@ -68,7 +68,7 @@ public class SystemEnvironmentUtil {
     /**
      *
      * @param key
-     *          Environment varable key
+     *          Environment variable key
      * @param def
      *          If the value isn't exist from the environment variables, It returns this default value
      *
