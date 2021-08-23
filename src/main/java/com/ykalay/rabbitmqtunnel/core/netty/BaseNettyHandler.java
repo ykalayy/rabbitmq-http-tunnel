@@ -37,7 +37,7 @@ public abstract class BaseNettyHandler<V> extends SimpleChannelInboundHandler<V>
         super(autoRelease);
     }
 
-    protected static void sendResponseWithNoBody(Channel channel, HttpResponseStatus httpResponseStatus) {
+    public static void sendResponseWithNoBody(Channel channel, HttpResponseStatus httpResponseStatus) {
         final HttpResponse badRequestResponse = new DefaultHttpResponse(
                 HttpVersion.HTTP_1_1,
                 httpResponseStatus);

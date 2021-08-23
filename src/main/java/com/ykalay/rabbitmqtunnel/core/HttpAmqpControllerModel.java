@@ -3,6 +3,7 @@ package com.ykalay.rabbitmqtunnel.core;
 import com.ykalay.rabbitmqtunnel.annotation.AmqpTunnelRequestMapper;
 
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 public class HttpAmqpControllerModel {
 
@@ -10,9 +11,12 @@ public class HttpAmqpControllerModel {
 
     private AmqpTunnelRequestMapper amqpTunnelRequestMapper;
 
+    private Pattern pattern;
+
     public HttpAmqpControllerModel(Method controllerMethod, AmqpTunnelRequestMapper amqpTunnelRequestMapper) {
         this.controllerMethod = controllerMethod;
         this.amqpTunnelRequestMapper = amqpTunnelRequestMapper;
+        this.pattern = Pattern.compile(amqpTunnelRequestMapper.path());
     }
 
     public Method getControllerMethod() {
@@ -29,5 +33,10 @@ public class HttpAmqpControllerModel {
 
     public void setAmqpTunnelRequestMapper(AmqpTunnelRequestMapper amqpTunnelRequestMapper) {
         this.amqpTunnelRequestMapper = amqpTunnelRequestMapper;
+        this.pattern = Pattern.compile(amqpTunnelRequestMapper.path());
+    }
+
+    public Pattern getPattern() {
+        return pattern;
     }
 }

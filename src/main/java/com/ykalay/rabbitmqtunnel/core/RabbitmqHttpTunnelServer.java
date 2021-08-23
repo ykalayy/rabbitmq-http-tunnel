@@ -75,6 +75,8 @@ public class RabbitmqHttpTunnelServer {
 
     private HttpAmqpControllerModelStore httpAmqpControllerModelStore;
 
+    private NettyChannelStore nettyChannelStore;
+
     public RabbitmqHttpTunnelServer(HttpAmqpTunnelController[] httpAmqpTunnelControllers,
                                     HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler,
                                     TunnelExceptionAdviser tunnelExceptionAdviser) {
@@ -100,7 +102,7 @@ public class RabbitmqHttpTunnelServer {
         this.rabbitmqEnvironmentInitializer.initResponseQueue();
 
         // Init a NettyChannelStore
-        NettyChannelStore.getInstance(httpAmqpTunnelTimeoutHandler);
+        this.nettyChannelStore = NettyChannelStore.getInstance(httpAmqpTunnelTimeoutHandler);
 
         // Controller Scan
         List<HttpAmqpControllerModel> httpAmqpControllerModelList = scanControllerMethods(httpAmqpTunnelControllers);
@@ -157,7 +159,7 @@ public class RabbitmqHttpTunnelServer {
 
         for(int i = 0; i < RabbitmqServerConfig.getInstance().getSelfQueueConsumerCount(); i++) {
             com.rabbitmq.client.Channel channel = this.rabbitmqChannelStore.getChannel();
-            Consumer consumer = new RabbitmqQueueConsumer();
+            Consumer consumer = new RabbitmqQueueConsumer(this.nettyChannelStore);
             channel.basicConsume(RabbitmqServerConfig.getInstance().getQueueName(), true, consumer);
         }
     }

@@ -10,11 +10,11 @@ import io.netty.handler.codec.http.HttpHeaders;
  *
  * @since 1.0
  */
-public class HttpRequest {
+public class TunnelHttpRequest {
 
     private final FullHttpMessage fullHttpMessage;
 
-    public HttpRequest(FullHttpMessage fullHttpMessage) {
+    public TunnelHttpRequest(FullHttpMessage fullHttpMessage) {
         this.fullHttpMessage = fullHttpMessage;
     }
 

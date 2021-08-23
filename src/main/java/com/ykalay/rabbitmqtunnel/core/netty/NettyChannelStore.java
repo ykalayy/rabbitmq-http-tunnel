@@ -50,7 +50,7 @@ public class NettyChannelStore {
         ScheduledFuture<?> timeoutTask = nettyChannelTimeoutScheduler.scheduleTimeoutTask(amqpMessage, channel);
 
         // Finally, we are adding channel into the nettyChannelStoreMap
-        nettyChannelStoreMap.put(amqpMessage.getUniqueMessageId(), new TunnelChannel(timeoutTask, amqpMessage));
+        nettyChannelStoreMap.put(amqpMessage.getUniqueMessageId(), new TunnelChannel(timeoutTask, amqpMessage, channel));
     }
 
     public void deRegisterNettyChannel(String uniqueMessageId) {
@@ -67,5 +67,10 @@ public class NettyChannelStore {
         }
         // We couldn't find the channel in store
         return null;
+    }
+
+    public TunnelChannel getTunnelChannel(String uniqueMessageId) {
+        TunnelChannel tunnelChannel = nettyChannelStoreMap.get(uniqueMessageId);
+        return tunnelChannel;
     }
 }
