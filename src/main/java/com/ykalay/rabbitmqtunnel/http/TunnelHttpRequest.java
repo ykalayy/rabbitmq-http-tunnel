@@ -3,6 +3,8 @@ package com.ykalay.rabbitmqtunnel.http;
 import io.netty.handler.codec.http.FullHttpMessage;
 import io.netty.handler.codec.http.HttpHeaders;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Represents the Incoming http requests
  *
@@ -10,6 +12,7 @@ import io.netty.handler.codec.http.HttpHeaders;
  *
  * @since 1.0
  */
+// TODO: THIS CLASS SHOULD Be MORE RICH
 public class TunnelHttpRequest {
 
     private final FullHttpMessage fullHttpMessage;
@@ -18,11 +21,11 @@ public class TunnelHttpRequest {
         this.fullHttpMessage = fullHttpMessage;
     }
 
-    public byte[] getBody() {
+    public String getBody() {
         if(fullHttpMessage.content().isReadable()) {
-            return fullHttpMessage.content().array();
+            return fullHttpMessage.content().toString(StandardCharsets.UTF_8);
         }
-        return new byte[0];
+        return "";
     }
 
     public HttpHeaders getHeaders() {

@@ -26,9 +26,9 @@ public class NettyChannelStore {
     /**
      * @return singleton lazy instance of {@link NettyChannelStore}
      */
-    public static NettyChannelStore getInstance(HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler) {
+    public static NettyChannelStore getInstance() {
         if(Objects.isNull(LAZY_HOLDER)) {
-            LAZY_HOLDER = new NettyChannelStore(httpAmqpTunnelTimeoutHandler);
+            LAZY_HOLDER = new NettyChannelStore();
         }
         return LAZY_HOLDER;
     }
@@ -37,11 +37,14 @@ public class NettyChannelStore {
      * Netty channel map
      */
     private final Map<String, TunnelChannel> nettyChannelStoreMap;
-    private final NettyChannelTimeoutScheduler nettyChannelTimeoutScheduler;
+    private NettyChannelTimeoutScheduler nettyChannelTimeoutScheduler;
 
 
-    private NettyChannelStore(HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler) {
+    private NettyChannelStore() {
         this.nettyChannelStoreMap = new ConcurrentHashMap<>();
+    }
+
+    public void setNettyChannelTimeoutScheduler(HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler) {
         this.nettyChannelTimeoutScheduler = NettyChannelTimeoutScheduler.getInstance(httpAmqpTunnelTimeoutHandler);
     }
 

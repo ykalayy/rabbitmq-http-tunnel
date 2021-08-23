@@ -4,6 +4,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
+import com.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import com.ykalay.rabbitmqtunnel.core.netty.BaseNettyHandler;
 import com.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
 import io.netty.buffer.Unpooled;
@@ -64,16 +65,20 @@ public class RabbitmqQueueConsumer implements Consumer {
         Channel nettyChannel = null;
         try {
             String messageId = properties.getMessageId();
-            String statusCode = (String) properties.getHeaders().get("statusCode");
+            Long statusCode = (Long) properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE);
             // Get the channel from store
             nettyChannel = this.nettyChannelStore.getTunnelChannel(messageId).getNettyChannel();
             FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                    HttpResponseStatus.valueOf(Integer.valueOf(statusCode)),
+                    HttpResponseStatus.valueOf(Math.toIntExact(statusCode)),
                     Unpooled.wrappedBuffer(body));
             response .headers().set(CONTENT_TYPE, "application/json");
             response .headers().set(CONTENT_LENGTH, response .content().readableBytes());
             nettyChannel.writeAndFlush(response);
+
+            // De-register the channel & remove timeout task
+            this.nettyChannelStore.deRegisterNettyChannel(messageId);
         } catch (Exception e) {
+            e.printStackTrace();
             if(nettyChannel != null) {
                 BaseNettyHandler.sendResponseWithNoBody(nettyChannel, HttpResponseStatus.INTERNAL_SERVER_ERROR);
             }

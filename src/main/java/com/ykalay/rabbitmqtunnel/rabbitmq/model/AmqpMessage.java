@@ -40,15 +40,12 @@ public class AmqpMessage<T> extends BaseMessage {
     /**
      * Constructor of message
      *
-     * @param uniqueMessageId
-     *          Unique message identifier of message
      * @param messageBody
      *          Custom message body
      * @param routingKey
      *          Routing-key
      */
-    public AmqpMessage(String uniqueMessageId, String routingKey, T messageBody) {
-        this.uniqueMessageId = uniqueMessageId;
+    public AmqpMessage(String routingKey, T messageBody) {
         this.routingKey = routingKey;
         this.messageBody = messageBody;
     }
@@ -56,8 +53,6 @@ public class AmqpMessage<T> extends BaseMessage {
     /**
      * All-args Constructor of message
      *
-     * @param uniqueMessageId
-     *          Unique message identifier of message
      * @param routingKey
      *          Routing-key
      * @param  targetExchange
@@ -65,8 +60,7 @@ public class AmqpMessage<T> extends BaseMessage {
      * @param messageBody
      *          Custom message body
      */
-    public AmqpMessage(String uniqueMessageId, String routingKey, String targetExchange, T messageBody) {
-        this.uniqueMessageId = uniqueMessageId;
+    public AmqpMessage(String routingKey, String targetExchange, T messageBody) {
         this.routingKey = routingKey;
         this.targetExchange = targetExchange;
         this.messageBody = messageBody;

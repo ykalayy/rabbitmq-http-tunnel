@@ -44,6 +44,8 @@ public class RabbitmqServerConfig {
 
     private static final int DEFAULT_SELF_QUEUE_CONSUMER_COUNT = Runtime.getRuntime().availableProcessors() * 2;
 
+    public static final String AMQP_RESPONSE_STATUS_CODE = "statusCode";
+
     private int rabbitmqPort = DEFAULT_RABBITMQ_PORT;
 
     private String rabbitmqHost = DEFAULT_RABBITMQ_HOST;

@@ -84,6 +84,7 @@ public class RabbitmqHttpTunnelServer {
         this.httpAmqpTunnelTimeoutHandler = httpAmqpTunnelTimeoutHandler;
         this.tunnelExceptionAdviser = tunnelExceptionAdviser;
         this.rabbitmqChannelStore = RabbitmqChannelStore.getInstance();
+        this.nettyServerPreferences = NettyServerPreferences.getInstance();
         this.httpAmqpControllerModelStore = HttpAmqpControllerModelStore.getInstance();
     }
 
@@ -102,7 +103,8 @@ public class RabbitmqHttpTunnelServer {
         this.rabbitmqEnvironmentInitializer.initResponseQueue();
 
         // Init a NettyChannelStore
-        this.nettyChannelStore = NettyChannelStore.getInstance(httpAmqpTunnelTimeoutHandler);
+        this.nettyChannelStore = NettyChannelStore.getInstance();
+        this.nettyChannelStore.setNettyChannelTimeoutScheduler(httpAmqpTunnelTimeoutHandler);
 
         // Controller Scan
         List<HttpAmqpControllerModel> httpAmqpControllerModelList = scanControllerMethods(httpAmqpTunnelControllers);
@@ -172,7 +174,7 @@ public class RabbitmqHttpTunnelServer {
                 // Check the method is annotated with AmqpTunnelRequestMapper
                 if(method.isAnnotationPresent(AmqpTunnelRequestMapper.class)) {
                     AmqpTunnelRequestMapper amqpTunnelRequestMapper = method.getAnnotation(AmqpTunnelRequestMapper.class);
-                    httpAmqpControllerModelList.add(new HttpAmqpControllerModel(method, amqpTunnelRequestMapper));
+                    httpAmqpControllerModelList.add(new HttpAmqpControllerModel(method, amqpTunnelRequestMapper,httpAmqpTunnelController));
                 }
             }
         }

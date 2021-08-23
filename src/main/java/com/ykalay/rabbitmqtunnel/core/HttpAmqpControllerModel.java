@@ -1,11 +1,14 @@
 package com.ykalay.rabbitmqtunnel.core;
 
 import com.ykalay.rabbitmqtunnel.annotation.AmqpTunnelRequestMapper;
+import com.ykalay.rabbitmqtunnel.handler.HttpAmqpTunnelController;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
 public class HttpAmqpControllerModel {
+
+    private final HttpAmqpTunnelController controllerInstance;
 
     private Method controllerMethod;
 
@@ -13,7 +16,9 @@ public class HttpAmqpControllerModel {
 
     private Pattern pattern;
 
-    public HttpAmqpControllerModel(Method controllerMethod, AmqpTunnelRequestMapper amqpTunnelRequestMapper) {
+    public HttpAmqpControllerModel(Method controllerMethod, AmqpTunnelRequestMapper amqpTunnelRequestMapper,
+                                   HttpAmqpTunnelController controllerInstance) {
+        this.controllerInstance = controllerInstance;
         this.controllerMethod = controllerMethod;
         this.amqpTunnelRequestMapper = amqpTunnelRequestMapper;
         this.pattern = Pattern.compile(amqpTunnelRequestMapper.path());
@@ -38,5 +43,9 @@ public class HttpAmqpControllerModel {
 
     public Pattern getPattern() {
         return pattern;
+    }
+
+    public HttpAmqpTunnelController getControllerInstance() {
+        return controllerInstance;
     }
 }
