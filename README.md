@@ -1,6 +1,6 @@
 # Rabbitmq-Http Tunnel: Asynchronous Java Http tunnel to Rabbitmq
 
-![example workflow](https://github.com/ykalay/rabbitmq-http-tunnel/actions/workflows/build_and_deploy.yml/badge.svg)
+![example workflow](https://github.com/ykalay/rabbitmq-http-tunnel/actions/workflows/build_and_deploy.yml/badge.svg) [Last-runs](https://github.com/ykalay/rabbitmq-http-tunnel/actions/workflows/build_and_deploy.yml)
 
 Rabbitmq Http Tunnel is a Java library for asynchronous and event-based protocol switcher from HTTP to AMQP.
 
