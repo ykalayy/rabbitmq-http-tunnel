@@ -47,5 +47,5 @@ public class RestController implements HttpAmqpTunnelController {
     }
 }
 ```
-Above controller will send your incoming HTTP Rest request into targetExchange with "hello" routing-key that's "service1-exchange" in example and the routing-key is hello
-And It will start to listen the queue service queue. In example it is "helloWord-responseQueue"
+Above controller will send your incoming HTTP Rest request into targetExchange with "hello" routing-key that's "service1-exchange" in example and the routing-key is "hello"
+It will start to listen the queue service queue. In example it is "helloWord-responseQueue"
