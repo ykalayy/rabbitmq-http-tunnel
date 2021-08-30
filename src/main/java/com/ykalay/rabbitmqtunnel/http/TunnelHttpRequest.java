@@ -1,6 +1,6 @@
 package com.ykalay.rabbitmqtunnel.http;
 
-import io.netty.handler.codec.http.FullHttpMessage;
+import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
 
 import java.nio.charset.StandardCharsets;
@@ -15,20 +15,33 @@ import java.nio.charset.StandardCharsets;
 // TODO: THIS CLASS SHOULD Be MORE RICH
 public class TunnelHttpRequest {
 
-    private final FullHttpMessage fullHttpMessage;
+    private final FullHttpRequest fullHttpRequest;
 
-    public TunnelHttpRequest(FullHttpMessage fullHttpMessage) {
-        this.fullHttpMessage = fullHttpMessage;
+    public TunnelHttpRequest(FullHttpRequest fullHttpRequest) {
+        this.fullHttpRequest = fullHttpRequest;
     }
 
+    /**
+     * @return Body of request as String
+     */
     public String getBody() {
-        if(fullHttpMessage.content().isReadable()) {
-            return fullHttpMessage.content().toString(StandardCharsets.UTF_8);
+        if(fullHttpRequest.content().isReadable()) {
+            return fullHttpRequest.content().toString(StandardCharsets.UTF_8);
         }
         return "";
     }
 
+    /**
+     * @return Header of Incoming Http Request
+     */
     public HttpHeaders getHeaders() {
-        return fullHttpMessage.headers();
+        return fullHttpRequest.headers();
+    }
+
+    /**
+     * @return Incoming request URI
+     */
+    public String getUri() {
+        return fullHttpRequest.getUri();
     }
 }
