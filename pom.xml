@@ -85,4 +85,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Rabbitmq-Rest-Tunnel Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ykalay/rabbitmq-http-tunnel</url>
+        </repository>
+    </distributionManagement>
+
 </project>
