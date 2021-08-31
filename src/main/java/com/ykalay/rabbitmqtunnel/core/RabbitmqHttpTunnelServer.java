@@ -110,6 +110,8 @@ public class RabbitmqHttpTunnelServer {
         List<HttpAmqpControllerModel> httpAmqpControllerModelList = scanControllerMethods(httpAmqpTunnelControllers);
         // Set it to the controller model store in order to use it from other sides easily
         this.httpAmqpControllerModelStore.setHttpAmqpControllerModelList(httpAmqpControllerModelList);
+        // Set timeoutHandler
+        this.httpAmqpControllerModelStore.setTimeoutController(this.tunnelExceptionAdviser);
 
         // Rabbitmq Consumer
         initRabbitmqConsumers();

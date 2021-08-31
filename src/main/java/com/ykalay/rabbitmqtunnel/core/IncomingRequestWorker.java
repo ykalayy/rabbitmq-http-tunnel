@@ -3,17 +3,20 @@ package com.ykalay.rabbitmqtunnel.core;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.AMQP;
 import com.ykalay.rabbitmqtunnel.annotation.AmqpTunnelRequestMapper;
+import com.ykalay.rabbitmqtunnel.core.netty.BaseNettyHandler;
 import com.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
+import com.ykalay.rabbitmqtunnel.handler.TunnelExceptionAdviser;
 import com.ykalay.rabbitmqtunnel.http.TunnelHttpRequest;
+import com.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 import com.ykalay.rabbitmqtunnel.rabbitmq.model.AmqpMessage;
 import com.ykalay.rabbitmqtunnel.rabbitmq.pool.RabbitmqChannelStore;
 import com.ykalay.rabbitmqtunnel.support.IdGenerator;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.util.ReferenceCountUtil;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class IncomingRequestWorker implements Runnable{
+public class IncomingRequestWorker implements Runnable {
 
     private final TunnelHttpRequest tunnelHttpRequest;
 
@@ -29,6 +32,8 @@ public class IncomingRequestWorker implements Runnable{
 
     private final ObjectMapper objectMapper;
 
+    private TunnelExceptionAdviser tunnelExceptionAdviser;
+
     public IncomingRequestWorker(TunnelHttpRequest tunnelHttpRequest, HttpAmqpControllerModel httpAmqpControllerModel,
                                  io.netty.channel.Channel nettyChannel,
                                  HttpRequest httpRequest) {
@@ -39,6 +44,7 @@ public class IncomingRequestWorker implements Runnable{
         this.nettyChannel = nettyChannel;
         this.httpRequest = httpRequest;
         this.objectMapper = new ObjectMapper();
+        this.tunnelExceptionAdviser = HttpAmqpControllerModelStore.getInstance().getTimeoutController();
     }
 
     @Override
@@ -61,7 +67,12 @@ public class IncomingRequestWorker implements Runnable{
             // Send message to the targetExchange...
             channel.basicPublish(targetExchange, amqpMessage.getRoutingKey(), basicProperties, this.objectMapper.writeValueAsBytes(amqpMessage.getMessageBody()));
         } catch (Exception e) {
-            e.printStackTrace();
+            if(this.tunnelExceptionAdviser == null) {
+                e.printStackTrace();
+            } else {
+                TunnelHttpResponse tunnelHttpResponse = this.tunnelExceptionAdviser.handleException(this.tunnelHttpRequest, e.getCause());
+                BaseNettyHandler.sendJsonResponseWithBody(this.nettyChannel, tunnelHttpResponse);
+            }
         } finally {
             if(channel != null) {
                 try {

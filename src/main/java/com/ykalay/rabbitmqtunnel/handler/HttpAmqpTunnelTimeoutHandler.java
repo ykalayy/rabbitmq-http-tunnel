@@ -1,5 +1,6 @@
 package com.ykalay.rabbitmqtunnel.handler;
 
+import com.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 import com.ykalay.rabbitmqtunnel.rabbitmq.model.AmqpMessage;
 
 /**
@@ -9,8 +10,7 @@ import com.ykalay.rabbitmqtunnel.rabbitmq.model.AmqpMessage;
  *
  * @since 1.0
  */
-public interface HttpAmqpTunnelTimeoutHandler<T> {
+public interface HttpAmqpTunnelTimeoutHandler {
 
-
-    byte[] handleTimeout(AmqpMessage<T> requestMessage, String uri);
+    TunnelHttpResponse handleTimeout(AmqpMessage requestMessage, String uri);
 }

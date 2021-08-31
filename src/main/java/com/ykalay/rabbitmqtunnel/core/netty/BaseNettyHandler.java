@@ -1,16 +1,18 @@
 package com.ykalay.rabbitmqtunnel.core.netty;
 
+import com.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultHttpResponse;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.*;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 
 /**
  * Base netty SimpleChannelInboundHandler
@@ -38,11 +40,21 @@ public abstract class BaseNettyHandler<V> extends SimpleChannelInboundHandler<V>
     }
 
     public static void sendResponseWithNoBody(Channel channel, HttpResponseStatus httpResponseStatus) {
-        final HttpResponse badRequestResponse = new DefaultHttpResponse(
+        final HttpResponse responseBody = new DefaultHttpResponse(
                 HttpVersion.HTTP_1_1,
                 httpResponseStatus);
 
-        channel.writeAndFlush(badRequestResponse)
+        channel.writeAndFlush(responseBody)
+                .addListener(ChannelFutureListener.CLOSE);
+    }
+
+    public static void sendJsonResponseWithBody(Channel channel, TunnelHttpResponse tunnelHttpResponse) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
+                tunnelHttpResponse.getHttpResponseStatus(), Unpooled.wrappedBuffer(tunnelHttpResponse.getBody()));
+        response.headers().set(CONTENT_TYPE, "application/json");
+        response.headers().set(CONTENT_LENGTH, response .content().readableBytes());
+
+        channel.writeAndFlush(response)
                 .addListener(ChannelFutureListener.CLOSE);
     }
 

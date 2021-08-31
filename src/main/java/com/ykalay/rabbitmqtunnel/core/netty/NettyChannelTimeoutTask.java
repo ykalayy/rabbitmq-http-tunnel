@@ -1,6 +1,7 @@
 package com.ykalay.rabbitmqtunnel.core.netty;
 
 import com.ykalay.rabbitmqtunnel.handler.HttpAmqpTunnelTimeoutHandler;
+import com.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 import com.ykalay.rabbitmqtunnel.rabbitmq.model.AmqpMessage;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -8,11 +9,11 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 public class NettyChannelTimeoutTask implements Runnable {
 
     private final Channel channel;
-    private final HttpAmqpTunnelTimeoutHandler<?> httpAmqpTunnelTimeoutHandler;
+    private final HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler;
     private final AmqpMessage amqpMessage;
     private final NettyChannelStore nettyChannelStore;
 
-    public NettyChannelTimeoutTask(Channel channel, HttpAmqpTunnelTimeoutHandler<?> httpAmqpTunnelTimeoutHandler, AmqpMessage<?> amqpMessage) {
+    public NettyChannelTimeoutTask(Channel channel, HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler, AmqpMessage<?> amqpMessage) {
         this.channel = channel;
         this.httpAmqpTunnelTimeoutHandler = httpAmqpTunnelTimeoutHandler;
         this.amqpMessage = amqpMessage;
@@ -23,9 +24,11 @@ public class NettyChannelTimeoutTask implements Runnable {
     public void run() {
         try {
             if(this.httpAmqpTunnelTimeoutHandler == null) {
-                BaseNettyHandler.sendResponseWithNoBody(channel, HttpResponseStatus.REQUEST_TIMEOUT);
+                BaseNettyHandler.sendResponseWithNoBody(this.channel, HttpResponseStatus.REQUEST_TIMEOUT);
             } else {
-                this.httpAmqpTunnelTimeoutHandler.handleTimeout(amqpMessage, BaseNettyHandler.getURIFromAttr(channel));
+                TunnelHttpResponse tunnelHttpResponse =
+                        this.httpAmqpTunnelTimeoutHandler.handleTimeout(amqpMessage, BaseNettyHandler.getURIFromAttr(channel));
+                BaseNettyHandler.sendJsonResponseWithBody(this.channel, tunnelHttpResponse);
             }
         } finally {
             this.nettyChannelStore.deRegisterNettyChannel(amqpMessage.getUniqueMessageId());

@@ -7,17 +7,11 @@ import com.rabbitmq.client.ShutdownSignalException;
 import com.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import com.ykalay.rabbitmqtunnel.core.netty.BaseNettyHandler;
 import com.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
-import io.netty.buffer.Unpooled;
+import com.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
 
 import java.io.IOException;
-
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 
 /**
  *
@@ -68,13 +62,10 @@ public class RabbitmqQueueConsumer implements Consumer {
             Long statusCode = (Long) properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE);
             // Get the channel from store
             nettyChannel = this.nettyChannelStore.getTunnelChannel(messageId).getNettyChannel();
-            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                    HttpResponseStatus.valueOf(Math.toIntExact(statusCode)),
-                    Unpooled.wrappedBuffer(body));
-            response .headers().set(CONTENT_TYPE, "application/json");
-            response .headers().set(CONTENT_LENGTH, response .content().readableBytes());
-            nettyChannel.writeAndFlush(response);
-
+            TunnelHttpResponse tunnelHttpResponse = new TunnelHttpResponse();
+            tunnelHttpResponse.setBody(body);
+            tunnelHttpResponse.setHttpResponseStatus(HttpResponseStatus.valueOf(Math.toIntExact(statusCode)));
+            BaseNettyHandler.sendJsonResponseWithBody(nettyChannel, tunnelHttpResponse);
             // De-register the channel & remove timeout task
             this.nettyChannelStore.deRegisterNettyChannel(messageId);
         } catch (Exception e) {
