@@ -1,9 +1,6 @@
 package com.ykalay.rabbitmqtunnel.rabbitmq.listener;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.ShutdownSignalException;
+import com.rabbitmq.client.*;
 import com.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import com.ykalay.rabbitmqtunnel.core.netty.BaseNettyHandler;
 import com.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
@@ -59,12 +56,12 @@ public class RabbitmqQueueConsumer implements Consumer {
         Channel nettyChannel = null;
         try {
             String messageId = properties.getMessageId();
-            Long statusCode = (Long) properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE);
+            int statusCode = getStatusCode(properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE));
             // Get the channel from store
             nettyChannel = this.nettyChannelStore.getTunnelChannel(messageId).getNettyChannel();
             TunnelHttpResponse tunnelHttpResponse = new TunnelHttpResponse();
             tunnelHttpResponse.setBody(body);
-            tunnelHttpResponse.setHttpResponseStatus(HttpResponseStatus.valueOf(Math.toIntExact(statusCode)));
+            tunnelHttpResponse.setHttpResponseStatus(HttpResponseStatus.valueOf(statusCode));
             BaseNettyHandler.sendJsonResponseWithBody(nettyChannel, tunnelHttpResponse);
             // De-register the channel & remove timeout task
             this.nettyChannelStore.deRegisterNettyChannel(messageId);
@@ -75,5 +72,16 @@ public class RabbitmqQueueConsumer implements Consumer {
             }
         }
 
+    }
+
+    private int getStatusCode(Object statusCode) {
+        if(statusCode instanceof  Long) {
+            return  ((Long) statusCode).intValue();
+        } else if(statusCode instanceof LongString) {
+            return  Integer.parseInt((statusCode).toString());
+        }
+        System.out.println(statusCode.getClass());
+        // 200 is default statusCode
+        return 200;
     }
 }
