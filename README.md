@@ -19,7 +19,7 @@ It allows you to use HTTP protocol as asynchronously with AMQP protocol
 <dependency>
   <groupId>com.ykalay</groupId>
   <artifactId>rabbitmq-http-tunnel</artifactId>
-  <version>1.0</version>
+  <version>1.0.4</version>
 </dependency>
 ```
 Run your server
