@@ -4,9 +4,37 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.ykalay</groupId>
+    <groupId>io.github.ykalay</groupId>
     <artifactId>rabbitmq-http-tunnel</artifactId>
     <version>1.0.6</version>
+
+    <name>Rabbitmq HTTP Tunnel</name>
+    <description>This library is an asynchronous http tunnel for rabbitmq.
+        Allows to use HTTP protocol with AMQP with non-blocking way</description>
+    <url>https://github.com/ykalay/rabbitmq-http-tunnel</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Yusuf KALAY</name>
+            <email>ykalayy7@gmail.com</email>
+            <organization>com.github.ykalay</organization>
+            <organizationUrl>https://github.com/ykalay/rabbitmq-http-tunnel</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://https://github.com/ykalay/rabbitmq-http-tunnel.git</connection>
+        <developerConnection>scm:git:ssh://https://github.com/ykalay/rabbitmq-http-tunnel.git</developerConnection>
+        <url>https://github.com/ykalay/rabbitmq-http-tunnel</url>
+    </scm>
+
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -54,32 +82,6 @@
         </dependency>
 
     </dependencies>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            &lt;!&ndash; other Maven plugins ... &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-assembly-plugin</artifactId>-->
-<!--                <version>3.1.1</version>-->
-
-<!--                <configuration>-->
-<!--                    <descriptorRefs>-->
-<!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
-<!--                    </descriptorRefs>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>make-assembly</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>single</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
     <build>
         <plugins>

@@ -22,7 +22,7 @@ The first step is to include Rabbitmq-http-tunnel into your project, for example
 
 ```maven
 <dependency>
-  <groupId>com.github.ykalay</groupId>
+  <groupId>io.github.ykalay</groupId>
   <artifactId>rabbitmq-http-tunnel</artifactId>
   <version>1.0.4</version>
 </dependency>
