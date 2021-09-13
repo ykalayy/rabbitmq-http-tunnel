@@ -89,6 +89,8 @@ public class RabbitmqHttpTunnelServer {
 
     /**
      * Starts the Rabbitmq Tunnel Server
+     *
+     * @throws Exception Configuration or runtime exceptions
      */
     public void start() throws Exception {
         // Initialize the Rabbitmq set-up

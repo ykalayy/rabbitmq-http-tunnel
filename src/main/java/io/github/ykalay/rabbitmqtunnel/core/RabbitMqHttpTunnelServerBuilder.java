@@ -156,7 +156,7 @@ public class RabbitMqHttpTunnelServerBuilder {
     /**
      * Setter of serviceName, It sets the rabbitmqQueue and rabbitmqExchange name of server
      *
-     * @apiNote This Queue & Exchange component names can be set by Environment variables
+     * This Queue and Exchange component names can be set by Environment variables
      *
      * @param serviceName
      *          Service Name

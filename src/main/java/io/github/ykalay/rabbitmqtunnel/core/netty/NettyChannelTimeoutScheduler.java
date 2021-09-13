@@ -27,6 +27,8 @@ public class NettyChannelTimeoutScheduler {
     private static NettyChannelTimeoutScheduler LAZY_HOLDER;
 
     /**
+     *
+     * @param httpAmqpTunnelTimeoutHandler Should be injected instance of httpAmqpTunnelTimeoutHandler
      * @return singleton lazy instance of {@link NettyChannelTimeoutScheduler}
      */
     public static NettyChannelTimeoutScheduler getInstance(HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler) {

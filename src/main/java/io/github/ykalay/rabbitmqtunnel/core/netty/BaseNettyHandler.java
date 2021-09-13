@@ -17,7 +17,7 @@ import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 /**
  * Base netty SimpleChannelInboundHandler
  *
- * @param <V>
+ * @param <V> Accepted Object-POJO
  *
  * @author ykalay
  *

@@ -5,11 +5,11 @@ import java.util.Objects;
 /**
  * Rabbitmq Server configuration class
  *
- * @implSpec  System Environments:
+ *          System Environments:
  *          RABBITMQ_TUNNEL_HOST: Host of rabbitmq to connect
  *          RABBITMQ_TUNNEL_PORT: Port of rabbitmq to connect
  *          RABBITMQ_TUNNEL_EXCHANGE_NAME: Name of exchange to create
- *          RABBITMQ_TUNNEL_QUEUE_NAME: Name of queue to bind exchange & is listened by tunnel library for responses
+ *          RABBITMQ_TUNNEL_QUEUE_NAME: Name of queue to bind exchange. That is listened by tunnel library for responses
  *
  * @author ykalay
  *

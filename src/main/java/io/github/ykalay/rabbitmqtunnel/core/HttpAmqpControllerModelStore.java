@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Controller store which is scanned & created by
- *
+ * Controller store which is scanned and created by
  * @see RabbitmqHttpTunnelServer
  */
 public class HttpAmqpControllerModelStore {

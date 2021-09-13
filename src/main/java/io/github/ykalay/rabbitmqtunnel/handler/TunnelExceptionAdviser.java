@@ -4,7 +4,7 @@ import io.github.ykalay.rabbitmqtunnel.http.TunnelHttpRequest;
 import io.github.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 
 /**
- * Rabbitmq HTTP->AMQP tunnel Exception adviser
+ * Rabbitmq HTTP to AMQP tunnel Exception adviser
  * Catch the possible exception and allows to the service handle them.
  *
  * @author ykalay

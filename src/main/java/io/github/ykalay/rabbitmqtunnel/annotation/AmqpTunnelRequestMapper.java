@@ -20,14 +20,17 @@ import java.lang.annotation.Target;
 public @interface AmqpTunnelRequestMapper {
 
     /**
-     * HttpMethod of controller function
+     * HttpMethod of controller function(GET/POST/PUT/PATCH...)
      *
+     * @return http-method
      * @since 1.0
      */
     HttpMethod httpMethod();
 
     /**
+     * Request path
      *
+     * @return path
      * @since 1.0
      */
     String path();
@@ -41,6 +44,7 @@ public @interface AmqpTunnelRequestMapper {
      *
      *          !!!NOTE: If the exchange is dynamic, please set the AMQP message targetExchange parameter
      *
+     * @return target-exchange name
      * @since 1.0
      */
     String targetExchange() default "undefined";

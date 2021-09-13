@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 /**
  * Netty related config values preference class
  *
- * @implSpec  System Environments:
+ *          System Environments:
  *          NETTY_PORT: Port of netty to listen incoming HTTP request
  *          NETTY_EVENT_LOOP_SIZE: Size of EventLoopThread
  *          NETTY_NATIVE_SUPPORT: Native support of netty
