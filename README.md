@@ -9,7 +9,7 @@ It allows you to use HTTP protocol as asynchronously with AMQP protocol
 #### Version 1.x
 - Easy to implement your event-driven architecture with AMQP protocol over HTTP
 - Async Http execution with powerful [Netty](https://github.com/netty/netty)  library  
-- Powerful Rabbitmq Channel Pooling with [Apache Commons Pool](https://commons.apache.org/proper/commons-pool) for more checkout (com.ykalay.rabbitmqtunnel.rabbitmq.pool.RabbitmqChannelStore)
+- Powerful Rabbitmq Channel Pooling with [Apache Commons Pool](https://commons.apache.org/proper/commons-pool) for more checkout (RabbitmqChannelStore)
 - No additional dependencies (just only rabbitmq-http-tunnel-1.0-jar)
 - Netty Epoll support [Netty-Native Transports](https://netty.io/wiki/native-transports.html)
 - Ready to use Thread-Model, you don't need to care about the thread-modeling
@@ -22,7 +22,7 @@ The first step is to include Rabbitmq-http-tunnel into your project, for example
 
 ```maven
 <dependency>
-  <groupId>com.ykalay</groupId>
+  <groupId>com.github.ykalay</groupId>
   <artifactId>rabbitmq-http-tunnel</artifactId>
   <version>1.0.4</version>
 </dependency>
