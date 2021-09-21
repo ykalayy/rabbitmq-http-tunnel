@@ -92,6 +92,45 @@ And that's it :)
 
 ##### Don't forget it. These all steps are done by non-blocking from server side. We didn't block any thread until response comes into response-queue. That's why you have to use this library in your scalable-powerful services
 
+
+### Response Handing with TunnelResponseInterceptor
+
+You can easily implement your response handler for modify incoming responses with "TunnelResponseInterceptor" interface
+
+##### Just implement your timeout logic. Example:
+```java
+public class IncomingResponseHandler implements TunnelResponseInterceptor{
+    @Override
+    public TunnelHttpResponse handleResponse(AMQP.BasicProperties properties, byte[] body) {
+        // Getting incoming response status code
+        int statusCode = StatusCodeHelper.getStatusCode(properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE));
+        
+        // In this example we are without changing it set it as body
+        TunnelHttpResponse tunnelHttpResponse = new TunnelHttpResponse();
+        tunnelHttpResponse.setBody(body);
+        tunnelHttpResponse.setHttpResponseStatus(HttpResponseStatus.valueOf(statusCode));
+        
+        // And let it go to the client
+        return tunnelHttpResponse;
+    }
+}
+```
+
+Add it into your server builder with "setHttpAmqpTunnelTimeoutHandler"
+```java
+RestController restController = new RestController();
+RestController2 anotherHttpController = new RestController2();
+IncomingResponseHandler incomingResponseHandler = new IncomingResponseHandler();
+
+RabbitMqHttpTunnelServerBuilder builder = new RabbitMqHttpTunnelServerBuilder();
+RabbitmqHttpTunnelServer server = builder.setHttpAmqpTunnelControllers(restController, anotherHttpController) // implements HttpAmqpTunnelController
+    .setResponseInterceptor(incomingResponseHandler) // Custom responseInterceptor Instance
+    .
+    .
+    .build();
+server.start();
+```
+
 ### Request Timeout Handing
 
 You can add a timeout handler with "HttpAmqpTunnelTimeoutHandler" into your server and run your own logics for them...
