@@ -1,9 +1,9 @@
 package io.github.ykalay.rabbitmqtunnel.rabbitmq.listener;
 
-import io.github.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import com.rabbitmq.client.*;
 import io.github.ykalay.rabbitmqtunnel.core.netty.BaseNettyHandler;
 import io.github.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
+import io.github.ykalay.rabbitmqtunnel.handler.TunnelResponseInterceptor;
 import io.github.ykalay.rabbitmqtunnel.http.TunnelHttpResponse;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -20,9 +20,11 @@ import java.io.IOException;
 public class RabbitmqQueueConsumer implements Consumer {
 
     private final NettyChannelStore nettyChannelStore;
+    private final TunnelResponseInterceptor responseInterceptor;
 
-    public RabbitmqQueueConsumer(NettyChannelStore nettyChannelStore) {
+    public RabbitmqQueueConsumer(NettyChannelStore nettyChannelStore, TunnelResponseInterceptor responseInterceptor) {
         this.nettyChannelStore = nettyChannelStore;
+        this.responseInterceptor = responseInterceptor;
     }
 
     @Override
@@ -56,12 +58,9 @@ public class RabbitmqQueueConsumer implements Consumer {
         Channel nettyChannel = null;
         try {
             String messageId = properties.getMessageId();
-            int statusCode = getStatusCode(properties.getHeaders().get(RabbitmqServerConfig.AMQP_RESPONSE_STATUS_CODE));
             // Get the channel from store
             nettyChannel = this.nettyChannelStore.getTunnelChannel(messageId).getNettyChannel();
-            TunnelHttpResponse tunnelHttpResponse = new TunnelHttpResponse();
-            tunnelHttpResponse.setBody(body);
-            tunnelHttpResponse.setHttpResponseStatus(HttpResponseStatus.valueOf(statusCode));
+            TunnelHttpResponse tunnelHttpResponse = this.responseInterceptor.handleResponse(properties, body);
             BaseNettyHandler.sendJsonResponseWithBody(nettyChannel, tunnelHttpResponse);
             // De-register the channel & remove timeout task
             this.nettyChannelStore.deRegisterNettyChannel(messageId);
@@ -72,16 +71,5 @@ public class RabbitmqQueueConsumer implements Consumer {
             }
         }
 
-    }
-
-    private int getStatusCode(Object statusCode) {
-        if(statusCode instanceof  Long) {
-            return  ((Long) statusCode).intValue();
-        } else if(statusCode instanceof LongString) {
-            return  Integer.parseInt((statusCode).toString());
-        }
-        System.out.println(statusCode.getClass());
-        // 200 is default statusCode
-        return 200;
     }
 }

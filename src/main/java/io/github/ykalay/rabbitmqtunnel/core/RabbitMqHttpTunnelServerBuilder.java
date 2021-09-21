@@ -5,6 +5,7 @@ import io.github.ykalay.rabbitmqtunnel.config.NettyServerPreferences;
 import io.github.ykalay.rabbitmqtunnel.config.RabbitmqPoolConfig;
 import io.github.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import io.github.ykalay.rabbitmqtunnel.exception.MissingConfigurationException;
+import io.github.ykalay.rabbitmqtunnel.handler.TunnelResponseInterceptor;
 import io.github.ykalay.rabbitmqtunnel.rabbitmq.connection.RabbitmqSingleConnectionPool;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -36,6 +37,11 @@ public class RabbitMqHttpTunnelServerBuilder {
      * Rabbitmq HTTP->AMQP tunnel Exception adviser instance
      */
     private TunnelExceptionAdviser tunnelExceptionAdviser;
+
+    /**
+     * Rabbitmq HTTP to AMQP tunnel Response interceptor implementation instance
+     */
+    private TunnelResponseInterceptor tunnelResponseInterceptor;
 
     public RabbitMqHttpTunnelServerBuilder() {}
 
@@ -100,6 +106,11 @@ public class RabbitMqHttpTunnelServerBuilder {
      */
     public RabbitMqHttpTunnelServerBuilder setHttpAmqpTunnelTimeoutHandler(HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler) {
         this.httpAmqpTunnelTimeoutHandler = httpAmqpTunnelTimeoutHandler;
+        return this;
+    }
+
+    public RabbitMqHttpTunnelServerBuilder setResponseInterceptor(TunnelResponseInterceptor tunnelResponseInterceptor) {
+        this.tunnelResponseInterceptor = tunnelResponseInterceptor;
         return this;
     }
 
@@ -191,6 +202,6 @@ public class RabbitMqHttpTunnelServerBuilder {
         }
         // Initialize the server instance
         return new RabbitmqHttpTunnelServer(this.httpAmqpTunnelControllers,
-                this.httpAmqpTunnelTimeoutHandler, this.tunnelExceptionAdviser);
+                this.httpAmqpTunnelTimeoutHandler, this.tunnelExceptionAdviser, this.tunnelResponseInterceptor);
     }
 }

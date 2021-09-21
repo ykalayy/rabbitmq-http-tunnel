@@ -6,6 +6,7 @@ import io.github.ykalay.rabbitmqtunnel.config.RabbitmqServerConfig;
 import io.github.ykalay.rabbitmqtunnel.core.netty.BaseNettyChannelInitializer;
 import io.github.ykalay.rabbitmqtunnel.core.netty.NettyChannelStore;
 import io.github.ykalay.rabbitmqtunnel.handler.HttpAmqpTunnelTimeoutHandler;
+import io.github.ykalay.rabbitmqtunnel.handler.TunnelResponseInterceptor;
 import io.github.ykalay.rabbitmqtunnel.rabbitmq.RabbitmqEnvironmentInitializer;
 import io.github.ykalay.rabbitmqtunnel.rabbitmq.listener.RabbitmqQueueConsumer;
 import io.github.ykalay.rabbitmqtunnel.rabbitmq.pool.RabbitmqChannelFactory;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *  Rabbitmq Tunnel Server
@@ -45,46 +47,52 @@ public class RabbitmqHttpTunnelServer {
     /**
      * Rabbitmq-http-tunnel Controller instances
      */
-    private HttpAmqpTunnelController[] httpAmqpTunnelControllers;
+    private final HttpAmqpTunnelController[] httpAmqpTunnelControllers;
 
     /**
      * Timeout Handler instance of tunnel server
      */
-    private HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler;
+    private final HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler;
 
     /**
      * Rabbitmq HTTP->AMQP tunnel Exception adviser instance
      */
-    private TunnelExceptionAdviser tunnelExceptionAdviser;
+    private final TunnelExceptionAdviser tunnelExceptionAdviser;
 
     /**
-     * Initializer of Rabbitmq Environment class instance
+     * Rabbitmq HTTP to AMQP tunnel Response interceptor implementation instance
      */
-    private RabbitmqEnvironmentInitializer rabbitmqEnvironmentInitializer;
+    private final TunnelResponseInterceptor responseInterceptor;
 
     /**
      * Rabbitmq channel store, We will use the channels for initialize the rabbitmq queue listeners
      */
-    private RabbitmqChannelStore rabbitmqChannelStore;
+    private final RabbitmqChannelStore rabbitmqChannelStore;
 
     /**
      * Netty server preferences for fetching event-loop thread, port, native-support...
      */
-    private NettyServerPreferences nettyServerPreferences;
+    private final NettyServerPreferences nettyServerPreferences;
 
-    private HttpAmqpControllerModelStore httpAmqpControllerModelStore;
+    private final HttpAmqpControllerModelStore httpAmqpControllerModelStore;
 
     private NettyChannelStore nettyChannelStore;
 
     public RabbitmqHttpTunnelServer(HttpAmqpTunnelController[] httpAmqpTunnelControllers,
                                     HttpAmqpTunnelTimeoutHandler httpAmqpTunnelTimeoutHandler,
-                                    TunnelExceptionAdviser tunnelExceptionAdviser) {
+                                    TunnelExceptionAdviser tunnelExceptionAdviser,
+                                    TunnelResponseInterceptor tunnelResponseInterceptor) {
         this.httpAmqpTunnelControllers = httpAmqpTunnelControllers;
         this.httpAmqpTunnelTimeoutHandler = httpAmqpTunnelTimeoutHandler;
         this.tunnelExceptionAdviser = tunnelExceptionAdviser;
         this.rabbitmqChannelStore = RabbitmqChannelStore.getInstance();
         this.nettyServerPreferences = NettyServerPreferences.getInstance();
         this.httpAmqpControllerModelStore = HttpAmqpControllerModelStore.getInstance();
+        if(Objects.isNull(tunnelResponseInterceptor)) {
+            this.responseInterceptor = TunnelResponseInterceptor.DEFAULT;
+        } else {
+            this.responseInterceptor = tunnelResponseInterceptor;
+        }
     }
 
     /**
@@ -97,11 +105,11 @@ public class RabbitmqHttpTunnelServer {
         RabbitmqChannelFactory.getInstance();
         RabbitmqChannelStore.getInstance();
         // Declare exchange & queue
-        this.rabbitmqEnvironmentInitializer = RabbitmqEnvironmentInitializer.getInstance();
+        RabbitmqEnvironmentInitializer rabbitmqEnvironmentInitializer = RabbitmqEnvironmentInitializer.getInstance();
         // Declare the exchange with SERVICE_NAME
-        this.rabbitmqEnvironmentInitializer.initExchange();
+        rabbitmqEnvironmentInitializer.initExchange();
         // Declare the queue and bind the queue to exchange
-        this.rabbitmqEnvironmentInitializer.initResponseQueue();
+        rabbitmqEnvironmentInitializer.initResponseQueue();
 
         // Init a NettyChannelStore
         this.nettyChannelStore = NettyChannelStore.getInstance();
@@ -164,7 +172,7 @@ public class RabbitmqHttpTunnelServer {
 
         for(int i = 0; i < RabbitmqServerConfig.getInstance().getSelfQueueConsumerCount(); i++) {
             com.rabbitmq.client.Channel channel = this.rabbitmqChannelStore.getChannel();
-            Consumer consumer = new RabbitmqQueueConsumer(this.nettyChannelStore);
+            Consumer consumer = new RabbitmqQueueConsumer(this.nettyChannelStore, this.responseInterceptor);
             channel.basicConsume(RabbitmqServerConfig.getInstance().getQueueName(), true, consumer);
         }
     }
