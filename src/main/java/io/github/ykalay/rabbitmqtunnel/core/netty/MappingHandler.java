@@ -13,6 +13,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 @ChannelHandler.Sharable
@@ -34,17 +35,17 @@ public class MappingHandler extends BaseNettyHandler<HttpRequest> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpRequest httpRequest) throws Exception {
         FullHttpRequest req = (FullHttpRequest) httpRequest;
-        this.httpAmqpControllerModelStore.getHttpAmqpControllerModelList().forEach( httpAmqpControllerModel -> {
+        AtomicBoolean controllerFoundCheck = new AtomicBoolean(false);
+        this.httpAmqpControllerModelStore.getHttpAmqpControllerModelList().forEach(httpAmqpControllerModel -> {
             Pattern pattern = httpAmqpControllerModel.getPattern();
-            if(httpAmqpControllerModel.getPattern() != null) {
-                if(pattern.matcher(req.uri()).find() &&
-                        httpRequest.method().equals(HttpMethod.valueOf(httpAmqpControllerModel.getAmqpTunnelRequestMapper().httpMethod().toString()))) {
-
-                    this.incomingRequestExecutor.submitWork(new IncomingRequestWorker(new TunnelHttpRequest(req), httpAmqpControllerModel, ctx.channel(), httpRequest));
-                } else {
-                    BaseNettyHandler.sendResponseWithNoBody(ctx.channel(), HttpResponseStatus.NOT_FOUND);
-                }
+            if (httpAmqpControllerModel.getPattern() != null && pattern.matcher(req.uri()).find() &&
+                    httpRequest.method().equals(HttpMethod.valueOf(httpAmqpControllerModel.getAmqpTunnelRequestMapper().httpMethod().toString()))) {
+                controllerFoundCheck.set(true);
+                this.incomingRequestExecutor.submitWork(new IncomingRequestWorker(new TunnelHttpRequest(req), httpAmqpControllerModel, ctx.channel(), httpRequest));
             }
         });
+        if (!controllerFoundCheck.get()) {
+            BaseNettyHandler.sendResponseWithNoBody(ctx.channel(), HttpResponseStatus.NOT_FOUND);
+        }
     }
 }

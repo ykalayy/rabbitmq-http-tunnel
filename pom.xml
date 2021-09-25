@@ -6,7 +6,7 @@
 
     <groupId>io.github.ykalay</groupId>
     <artifactId>rabbitmq-http-tunnel</artifactId>
-    <version>1.0.8-RELEASE</version>
+    <version>1.0.8</version>
 
     <name>Rabbitmq HTTP Tunnel</name>
     <description>This library is an asynchronous http tunnel for rabbitmq.
