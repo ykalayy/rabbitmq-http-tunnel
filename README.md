@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/83633825/152201478-e4970918-74c5-4bbe-b4f4-dccf1b9ecb0f.jpeg" width="200" height="200" />
+</p>
+
 # Rabbitmq-Http Tunnel: Asynchronous Java Http tunnel to Rabbitmq
 
 <a href='https://github.com/ykalay/rabbitmq-http-tunnel/actions/workflows/build_and_deploy.yml'><img src='https://github.com/ykalay/rabbitmq-http-tunnel/actions/workflows/build_and_deploy.yml/badge.svg'></a>
